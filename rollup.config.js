@@ -2,6 +2,7 @@ import resolve from '@rollup/plugin-node-resolve'
 import babel from '@rollup/plugin-babel'
 import { terser } from 'rollup-plugin-terser'
 import commonjs from '@rollup/plugin-commonjs'
+import json from '@rollup/plugin-json'
 
 import pkg from './package.json'
 
@@ -13,7 +14,7 @@ const makeExternalPredicate = (externalArr) => {
   return (id) => pattern.test(id)
 }
 
-const extensions = ['.ts', 'js']
+const extensions = ['.ts', '.js', '.json']
 
 export default [
   // CommonJS for Node
@@ -27,6 +28,7 @@ export default [
     ]),
     plugins: [
       resolve(),
+      json(),
       babel({
         babelHelpers: 'runtime',
         extensions,
@@ -47,6 +49,7 @@ export default [
     ]),
     plugins: [
       resolve(),
+      json(),
       babel({
         babelHelpers: 'runtime',
         extensions,
@@ -66,6 +69,7 @@ export default [
     external: makeExternalPredicate([]),
     plugins: [
       resolve(),
+      json(),
       babel({
         babelHelpers: 'bundled',
         exclude: 'node_modules/**',
@@ -87,6 +91,7 @@ export default [
     external: makeExternalPredicate([]),
     plugins: [
       resolve(),
+      json(),
       babel({
         babelHelpers: 'bundled',
         exclude: 'node_modules/**',

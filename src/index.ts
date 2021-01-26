@@ -2,7 +2,7 @@ import { GlobalConfig, userEnv } from './store'
 import { bindEvent } from './effects/effect'
 import { pageWillMount } from './lifecycle'
 import { getOS, getBrowser } from './util'
-import pkg from './package.json'
+import pkg from '../package.json'
 
 export function init(config: GlobalConfig) {
   pageWillMount()
