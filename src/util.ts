@@ -1,4 +1,32 @@
-import { GlobalConfig } from './store'
+import { getGlobalConfig } from './store'
+
+export function sendBeacon(data: any) {
+  if (typeof window.navigator.sendBeacon === 'function') {
+  } else {
+    warn('navigator.sendBeacon not surported')
+  }
+}
+
+export function post(data: object) {
+  const config = getGlobalConfig()
+  if (typeof window.XMLHttpRequest === 'function') {
+    const xhr = new XMLHttpRequest()
+    xhr.open('POST', config.reportUrl, true)
+    xhr.setRequestHeader('Content-Type', 'text/plain')
+    xhr.send(JSON.stringify(data))
+    xhr.onreadystatechange = function (e) {
+      if (xhr.readyState === 4) {
+        if (xhr.status >= 200 && xhr.status <= 299) {
+          warn('前端监控推送成功！')
+        } else {
+          warn('前端监控推送失败！')
+        }
+      }
+    }
+  } else {
+    warn('浏览器不支持XMLHttpRequest')
+  }
+}
 
 export function warn(...args: any[]) {
   args.unshift('[senea] ')
@@ -9,13 +37,13 @@ export function isArray(obj: any) {
   return Array.isArray(obj)
 }
 
-export function isValidUrl(url = window.location.pathname) {
-  const config = GlobalConfig.current
+export function isWatchedUrl(url = window.location.pathname) {
+  const config = getGlobalConfig()
   const includePaths = config.includePaths
   const excludePaths = config.excludePaths
-  if (isArray(includePaths)) {
+  if (isArray(includePaths) && includePaths.length > 0) {
     return includePaths.some((path) => path === url)
-  } else if (isArray(excludePaths)) {
+  } else if (isArray(excludePaths) && excludePaths.length > 0) {
     return !includePaths.some((path) => path === url)
   }
   return true

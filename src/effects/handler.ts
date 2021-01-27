@@ -1,20 +1,15 @@
-import { isValidUrl } from '../util'
-import {
-  errors,
-  navPerfs,
-  resourcesPerfs,
-  apiPerfs,
-  behaviors,
-  getStore,
-  reset
-} from '../store'
-import { post } from '../reporter'
-import { pageWillUnmounted } from '../lifecycle'
+import { beforeRouteLeave } from '../lifecycle'
+import { saveUserBehavior, saveError } from '../store'
+import { isWatchedUrl } from '../util'
+
+export function handleRouteLeave() {
+  beforeRouteLeave()
+}
 
 export function handleError(e: Event) {
-  if (isValidUrl() && e.isTrusted) {
+  if (isWatchedUrl() && e.isTrusted) {
     if (e instanceof ErrorEvent) {
-      errors.push({
+      saveError({
         type: e.type,
         timeStamp: e.timeStamp,
         message: e.error.message,
@@ -26,7 +21,7 @@ export function handleError(e: Event) {
     } else if (e instanceof Event) {
       const target = e.target
       if (target instanceof Element) {
-        errors.push({
+        saveError({
           type: e.type,
           timeStamp: e.timeStamp,
           message: 'network error in ' + target?.outerHTML,
@@ -36,7 +31,7 @@ export function handleError(e: Event) {
           colno: 0
         })
       } else {
-        errors.push({
+        saveError({
           type: e.type,
           timeStamp: e.timeStamp,
           message: 'unknown error',
@@ -51,8 +46,8 @@ export function handleError(e: Event) {
 }
 
 export function handleRejection(e: PromiseRejectionEvent) {
-  if (isValidUrl() && e.isTrusted) {
-    errors.push({
+  if (isWatchedUrl() && e.isTrusted) {
+    saveError({
       type: e.type,
       timeStamp: e.timeStamp,
       message: e.reason,
@@ -65,10 +60,10 @@ export function handleRejection(e: PromiseRejectionEvent) {
 }
 
 export function handleBehaviorClick(e: MouseEvent) {
-  if (isValidUrl() && e.isTrusted) {
+  if (isWatchedUrl() && e.isTrusted) {
     const target = e.target
     if (target instanceof Element) {
-      behaviors.push({
+      saveUserBehavior({
         type: 'click',
         step: 1,
         target: target.nodeName,
@@ -77,68 +72,4 @@ export function handleBehaviorClick(e: MouseEvent) {
       })
     }
   }
-}
-
-export function handleApiPerf(e: CustomEvent) {
-  if (isValidUrl() && e.isTrusted) {
-    apiPerfs.push(e.detail.payload)
-  }
-}
-
-export function handleBeforeUnload() {
-  pageWillUnmounted()
-  if (isValidUrl()) {
-    const store = getStore()
-    post(store)
-  }
-  reset()
-}
-
-export function handleNavPerf() {
-  const [
-    {
-      connectEnd,
-      connectStart,
-      domContentLoadedEventEnd,
-      domInteractive,
-      domainLookupEnd,
-      domainLookupStart,
-      fetchStart,
-      loadEventStart,
-      requestStart,
-      responseEnd,
-      responseStart,
-      secureConnectionStart,
-      type
-    }
-  ] = performance.getEntriesByType(
-    'navigation'
-  ) as PerformanceNavigationTiming[]
-  const navTimes = {
-    dns: domainLookupEnd - domainLookupStart,
-    tcp: connectEnd - connectStart,
-    ssl: secureConnectionStart === 0 ? 0 : connectEnd - secureConnectionStart,
-    ttfb: responseStart - requestStart,
-    trans: responseEnd - responseStart,
-    dom: domInteractive - responseEnd,
-    res: loadEventStart - domContentLoadedEventEnd,
-    firstbyte: responseStart - domainLookupStart,
-    fpt: responseEnd - fetchStart,
-    tti: domInteractive - fetchStart,
-    ready: domContentLoadedEventEnd - fetchStart,
-    load: loadEventStart - fetchStart,
-    navtype: type
-  }
-  navPerfs.push(navTimes)
-}
-
-export function handleResourcePerf(timeout: number) {
-  const resourceTimes = performance.getEntriesByType(
-    'resource'
-  ) as PerformanceResourceTiming[]
-  resourceTimes.forEach((item) => {
-    if (item.responseEnd - item.startTime >= timeout) {
-      resourcesPerfs.push(item.name)
-    }
-  })
 }

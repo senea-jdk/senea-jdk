@@ -2,11 +2,16 @@ declare module '*.json'
 
 type DataType = 'error' | 'perf' | 'behavior'
 
-interface GlobalStore extends UserEnv, Runtime {
-  errors: EventData[]
-  perfs: NavTiming[]
-  behaviors: Behavior[]
-  apiPerfs: APIData[]
+interface Window {
+  CustomEvent: any
+  __senea_store__: any
+}
+
+interface GlobalStore extends Client, PageRuntime {
+  errors: Exception[]
+  perfs: NavPerf[]
+  behaviors: UserBehavior[]
+  apiPerfs: APIPerf[]
   timeoutResources: string[]
 }
 
@@ -24,7 +29,7 @@ interface GlobalStore extends UserEnv, Runtime {
  * openBehavior 是否监控用户行为
  * behaviorActions 监控用户的哪些行为，比如['click']
  * maxMsgLength 说明性字段的最大长度
- * resourceTimeout 资源加载超时上报阈值
+ * resourceTimeout 异步资源加载超时上报阈值
  */
 interface GlobalConfig {
   pid: string
@@ -54,7 +59,7 @@ interface GlobalConfig {
  * sid sessionid
  * token 是否过期
  */
-interface UserEnv {
+interface Client {
   ua: string
   browser: string
   os: string
@@ -81,7 +86,7 @@ interface UserEnv {
  * de document编码
  * stay 页面停留时间(onbeforeunloadTime - onloadTime)
  */
-interface Runtime {
+interface PageRuntime {
   pathname: string
   domain: string
   hash: string
@@ -105,7 +110,7 @@ interface Runtime {
  * lineno 第几行
  * colno 第几列
  */
-interface EventData {
+interface Exception {
   type: string
   timeStamp: number
   message: string
@@ -131,7 +136,7 @@ interface EventData {
  * bandWidth 估计的带宽 单位M/s(window.navigator.connection.bandWidth)
  * navtype nav方式 如reload(type)
  */
-interface NavTiming {
+interface NavPerf {
   dns: number
   tcp: number
   ssl: number
@@ -155,7 +160,7 @@ interface NavTiming {
  * message 信息
  * method get/post
  */
-interface APIData {
+interface APIPerf {
   url: string
   duration: number
   code: number
@@ -169,7 +174,7 @@ interface APIData {
  * step 当前页面用户每点击一次+1，表示操作深度
  * target 目标节点名
  */
-interface Behavior {
+interface UserBehavior {
   type: 'navigation' | 'click'
   step: number
   target: string
