@@ -52,7 +52,7 @@ interface GlobalConfig {
  * ua 浏览器的userAgent
  * os 操作系统
  * ip IP地址
- * jdk jdk版本
+ * sdk sdk版本
  * pid 项目id
  * pversion 项目迭代版本
  * uid userid
@@ -64,7 +64,7 @@ interface Client {
   browser: string
   os: string
   ip: string
-  jdk: string
+  sdk: string
   pid: string
   pversion: string
   uid: string

@@ -76,8 +76,8 @@ export default [
         extensions,
         presets: ['@babel/preset-env', '@babel/preset-typescript']
       }),
-      commonjs({ extensions })
-      // terser()
+      commonjs({ extensions }),
+      terser()
     ]
   },
   // UMD for Browsers
@@ -98,8 +98,8 @@ export default [
         extensions,
         presets: ['@babel/preset-env', '@babel/preset-typescript']
       }),
-      commonjs({ extensions })
-      // terser()
+      commonjs({ extensions }),
+      terser()
     ]
   }
 ]

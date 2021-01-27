@@ -29,7 +29,7 @@ export function beforeRouteEnter() {
       os: getOS(),
       browser: getBrowser(),
       ip: '',
-      jdk: pkg.version,
+      sdk: pkg.version,
       pid: '',
       pversion: '',
       uid: '',
