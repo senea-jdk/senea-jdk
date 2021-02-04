@@ -100,10 +100,10 @@ export function getStore() {
 function getPageRuntime(): PageRuntime {
   const loc = window.location
   const runtime = {
-    pathname: loc.pathname,
-    domain: loc.host,
-    hash: loc.hash,
-    protocol: loc.protocol,
+    origin: decodeURIComponent(loc.origin),
+    pathname: decodeURIComponent(loc.pathname),
+    hash: decodeURIComponent(loc.hash),
+    search: decodeURIComponent(loc.search),
     referrer: document.referrer,
     sr: `${window.screen.width}/${window.screen.height}`,
     screenColorDepth: window.screen.colorDepth,

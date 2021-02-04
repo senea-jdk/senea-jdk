@@ -14,7 +14,6 @@ export function handleError(e: Event) {
         timeStamp: e.timeStamp,
         message: e.error.message,
         stack: e.error.stack,
-        filename: e.filename,
         lineno: e.lineno,
         colno: e.colno
       })
@@ -26,7 +25,6 @@ export function handleError(e: Event) {
           timeStamp: e.timeStamp,
           message: 'network error in ' + target?.outerHTML,
           stack: '',
-          filename: '',
           lineno: 0,
           colno: 0
         })
@@ -36,7 +34,6 @@ export function handleError(e: Event) {
           timeStamp: e.timeStamp,
           message: 'unknown error',
           stack: '',
-          filename: '',
           lineno: 0,
           colno: 0
         })
@@ -52,7 +49,6 @@ export function handleRejection(e: PromiseRejectionEvent) {
       timeStamp: e.timeStamp,
       message: e.reason,
       stack: '',
-      filename: '',
       lineno: 0,
       colno: 0
     })

@@ -73,10 +73,6 @@ interface Client {
 }
 
 /**
- * pathname 当前页面pathname
- * domain 当前页面域名
- * hash 当前页面hash
- * protocol 请求协议
  * referrer 上个url
  * sr 页面分辨率
  * screenColorDepth 页面颜色深度
@@ -87,11 +83,10 @@ interface Client {
  * stay 页面停留时间(onbeforeunloadTime - onloadTime)
  */
 interface PageRuntime {
+  origin: string
   pathname: string
-  domain: string
   hash: string
-  protocol: string
-  referrer: string
+  search: string
   sr: string
   screenColorDepth: number
   dpr: number
@@ -106,7 +101,6 @@ interface PageRuntime {
  * timeStamp 时间戳ms
  * message 错误信息
  * stack 事件流所经过的 DOM 节点组成的数组(Event.deepPath)
- * filename 发生错误所在的文件
  * lineno 第几行
  * colno 第几列
  */
@@ -115,7 +109,6 @@ interface Exception {
   timeStamp: number
   message: string
   stack: string
-  filename: string
   lineno: number
   colno: number
 }
@@ -173,6 +166,8 @@ interface APIPerf {
  * 每次路由reset ClickBehavior.step = 0
  * step 当前页面用户每点击一次+1，表示操作深度
  * target 目标节点名
+ * offsetx 行为触发的横向坐标
+ * offsety 行为触发的纵向坐标
  */
 interface UserBehavior {
   type: 'navigation' | 'click'
