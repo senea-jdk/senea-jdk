@@ -5,6 +5,13 @@ type DataType = 'error' | 'perf' | 'behavior'
 interface Window {
   CustomEvent: any
   __senea_store__: any
+  senea: {
+    (...args: any[]): void
+    q: any[]
+  }
+  senea_e: {
+    q: any[]
+  }
 }
 
 interface GlobalStore extends Client, PageRuntime {
