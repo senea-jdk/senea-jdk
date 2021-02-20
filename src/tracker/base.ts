@@ -19,7 +19,7 @@ export const init = () => {
 }
 
 const createTracker = () => {
-  senea('create', TRACKING_ID, 'auto')
+  senea('create', TRACKING_ID)
   senea('set', 'transport', 'beacon')
 }
 
@@ -63,7 +63,7 @@ export const trackError = (err: any = {}, fieldsObj = {}) => {
 const trackRuntime = () => {
   senea((tracker: any) => {
     tracker.set({
-      clientId: tracker.get('clientId'),
+      clientId: tracker.getField('clientId'),
       windowId: getUuid()
     })
   })
@@ -117,7 +117,6 @@ const sendNavigationTimingMetrics = () => {
     ready: Math.round(domContentLoadedEventEnd - fetchStart),
     load: Math.round(loadEventStart - fetchStart)
   }
-  const navType = type
 
   // In some edge cases browsers return very obviously incorrect NT values,
   // e.g. 0, negative, or future times. This validates values before sending.
@@ -126,13 +125,9 @@ const sendNavigationTimingMetrics = () => {
   }
 
   if (allValuesAreValid(Object.values(navTiming))) {
-    senea('send', 'event', {
-      eventCategory: 'Navigation Timing',
-      eventAction: 'track',
-      eventLabel: NULL_VALUE,
-      nonInteraction: true,
-      navTiming,
-      navType
+    senea('send', 'performance', {
+      type,
+      timing: navTiming
     })
   }
 }

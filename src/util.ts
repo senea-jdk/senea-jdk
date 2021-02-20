@@ -1,31 +1,7 @@
-import { getGlobalConfig } from './store'
+export const noob = function () {}
 
-export function sendBeacon(data: any) {
-  if (typeof window.navigator.sendBeacon === 'function') {
-  } else {
-    warn('navigator.sendBeacon not surported')
-  }
-}
-
-export function post(data: object) {
-  const config = getGlobalConfig()
-  if (typeof window.XMLHttpRequest === 'function') {
-    const xhr = new XMLHttpRequest()
-    xhr.open('POST', config.reportUrl, true)
-    xhr.setRequestHeader('Content-Type', 'text/plain')
-    xhr.send(JSON.stringify(data))
-    xhr.onreadystatechange = function (e) {
-      if (xhr.readyState === 4) {
-        if (xhr.status >= 200 && xhr.status <= 299) {
-          warn('前端监控推送成功！')
-        } else {
-          warn('前端监控推送失败！')
-        }
-      }
-    }
-  } else {
-    warn('浏览器不支持XMLHttpRequest')
-  }
+export function throwError(message: string) {
+  throw new Error(message)
 }
 
 export function warn(...args: any[]) {
@@ -33,21 +9,36 @@ export function warn(...args: any[]) {
   console.warn(...args)
 }
 
-export function isArray(obj: any) {
-  return Array.isArray(obj)
+export function isFunction(argv: any) {
+  return typeof argv === 'function'
 }
 
-export function isWatchedUrl(url = window.location.pathname) {
-  const config = getGlobalConfig()
-  const includePaths = config.includePaths
-  const excludePaths = config.excludePaths
-  if (isArray(includePaths) && includePaths.length > 0) {
-    return includePaths.some((path) => path === url)
-  } else if (isArray(excludePaths) && excludePaths.length > 0) {
-    return !includePaths.some((path) => path === url)
-  }
-  return true
+export function isObject(argv: any) {
+  return Object.prototype.toString.call(argv) === '[object Object]'
 }
+
+export function isString(argv: any) {
+  return typeof argv === 'string'
+}
+
+export function isArray(argv: any): argv is [] {
+  return Object.prototype.toString.call(argv) === '[object Array]'
+}
+
+export function randomString(length = 6) {
+  const temp = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz'
+  let result = ''
+  for (let i = 0; i < length; i++) {
+    result += temp.charAt(Math.floor(Math.random() * temp.length))
+  }
+  return result
+}
+
+export const getUuid = (a: string = ''): string =>
+  a
+    ? /* eslint-disable no-bitwise */
+      ((Number(a) ^ (Math.random() * 16)) >> (Number(a) / 4)).toString(16)
+    : `${1e7}-${1e3}-${4e3}-${8e3}-${1e11}`.replace(/[018]/g, getUuid)
 
 export function getBrowser() {
   var userAgent = navigator.userAgent
@@ -155,18 +146,3 @@ export function getOS() {
   }
   return os
 }
-
-export function randomString(length = 6) {
-  const temp = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz'
-  let result = ''
-  for (let i = 0; i < length; i++) {
-    result += temp.charAt(Math.floor(Math.random() * temp.length))
-  }
-  return result
-}
-
-export const getUuid = (a: string = ''): string =>
-  a
-    ? /* eslint-disable no-bitwise */
-      ((Number(a) ^ (Math.random() * 16)) >> (Number(a) / 4)).toString(16)
-    : `${1e7}-${1e3}-${4e3}-${8e3}-${1e11}`.replace(/[018]/g, getUuid)

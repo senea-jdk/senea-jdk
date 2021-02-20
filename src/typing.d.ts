@@ -6,8 +6,8 @@ interface Window {
   CustomEvent: any
   __senea_store__: any
   senea: {
-    (...args: any[]): void
-    q: any[]
+    (...args: Task): void
+    q?: Task[]
   }
   senea_e: {
     q: any[]
@@ -183,3 +183,21 @@ interface UserBehavior {
   offsetx: number
   offsety: number
 }
+
+interface CreateTrackerOption {
+  tId: string
+}
+interface Tracker {
+  setField(fieldName: string, fieldValue: any): void
+  getField(fieldName: string): void
+  send(hitType: string, opts: any): void
+}
+interface TrackerConstructor {
+  readonly prototype: Tracker
+  new (arg: CreateTrackerOption): void
+}
+
+type CommandTask = [string, string, ...any[]]
+type CallbackTask = [(tracker: Tracker) => void]
+
+type Task = CommandTask | CallbackTask
