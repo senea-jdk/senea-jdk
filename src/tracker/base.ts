@@ -101,6 +101,22 @@ const sendNavigationTimingMetrics = () => {
     'navigation'
   ) as PerformanceNavigationTiming[]
 
+  /**
+   * dns dns耗时(domainLookupEnd - domainLookupStart)
+   * tcp tcp耗时(connectEnd - connetStart)
+   * ssl ssl耗时(connectEnd - secureConnectionStart)
+   * ttfb 网络耗时(responseStart - requestStart)
+   * trans 数据传输耗时(responseEnd - responseStart)
+   * dom dom解析耗时(domInteractive - responseEnd)
+   * res 同步资源加载耗时(loadEventStart - domContentLoadedEventEnd)
+   * firstbyte 首包到达耗时(responseStart - domainLookupStart)
+   * fpt 首次渲染耗时或白屏时间(responseEnd - fetchStart)
+   * tti 首次可交付耗时(domInteractive - fetchStart)
+   * ready 加载完成耗时(domContentLoadEventEnd - fetchStart)
+   * load 页面完全加载时间(loadEventStart - fetchStart)
+   * bandWidth 估计的带宽 单位M/s(window.navigator.connection.bandWidth)
+   * navtype nav方式 如reload(type)
+   */
   const navTiming = {
     dns: Math.round(domainLookupEnd - domainLookupStart),
     tcp: Math.round(connectEnd - connectStart),

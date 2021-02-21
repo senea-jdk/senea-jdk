@@ -1,10 +1,5 @@
 declare module '*.json'
-
-type DataType = 'error' | 'perf' | 'behavior'
-
 interface Window {
-  CustomEvent: any
-  __senea_store__: any
   senea: {
     (...args: Task): void
     q?: Task[]
@@ -12,14 +7,6 @@ interface Window {
   senea_e: {
     q: any[]
   }
-}
-
-interface GlobalStore extends Client, PageRuntime {
-  errors: Exception[]
-  perfs: NavPerf[]
-  behaviors: UserBehavior[]
-  apiPerfs: APIPerf[]
-  timeoutResources: string[]
 }
 
 /**
@@ -103,94 +90,19 @@ interface PageRuntime {
   stay: number
 }
 
-/**
- * type 事件类型
- * timeStamp 时间戳ms
- * message 错误信息
- * stack 事件流所经过的 DOM 节点组成的数组(Event.deepPath)
- * lineno 第几行
- * colno 第几列
- */
-interface Exception {
-  type: string
-  timeStamp: number
-  message: string
-  stack: string
-  lineno: number
-  colno: number
-}
-
-/**
- * dns dns耗时(domainLookupEnd - domainLookupStart)
- * tcp tcp耗时(connectEnd - connetStart)
- * ssl ssl耗时(connectEnd - secureConnectionStart)
- * ttfb 网络耗时(responseStart - requestStart)
- * trans 数据传输耗时(responseEnd - responseStart)
- * dom dom解析耗时(domInteractive - responseEnd)
- * res 同步资源加载耗时(loadEventStart - domContentLoadedEventEnd)
- * firstbyte 首包到达耗时(responseStart - domainLookupStart)
- * fpt 首次渲染耗时或白屏时间(responseEnd - fetchStart)
- * tti 首次可交付耗时(domInteractive - fetchStart)
- * ready 加载完成耗时(domContentLoadEventEnd - fetchStart)
- * load 页面完全加载时间(loadEventStart - fetchStart)
- * bandWidth 估计的带宽 单位M/s(window.navigator.connection.bandWidth)
- * navtype nav方式 如reload(type)
- */
-interface NavPerf {
-  dns: number
-  tcp: number
-  ssl: number
-  ttfb: number
-  trans: number
-  dom: number
-  res: number
-  firstbyte: number
-  fpt: number
-  tti: number
-  ready: number
-  load: number
-  bandWidth?: number
-  navtype: string
-}
-
-/**
- * url 接口地址
- * duration 请求耗时
- * code http状态码
- * message 信息
- * method get/post
- */
-interface APIPerf {
-  url: string
-  duration: number
-  code: number
-  message: string
-  method: string
-}
-
-/**
- * type 行为类型
- * 每次路由reset ClickBehavior.step = 0
- * step 当前页面用户每点击一次+1，表示操作深度
- * target 目标节点名
- * offsetx 行为触发的横向坐标
- * offsety 行为触发的纵向坐标
- */
-interface UserBehavior {
-  type: 'navigation' | 'click'
-  step: number
-  target: string
-  offsetx: number
-  offsety: number
-}
-
 interface CreateTrackerOption {
   tId: string
+  pId: string
+  token: string
+  isHTTPS?: boolean
+  origin?: string
+  transport?: string
+  clientId?: string
 }
 interface Tracker {
   setField(fieldName: string, fieldValue: any): void
   getField(fieldName: string): void
-  send(hitType: string, opts: any): void
+  send(hitType: string, param: any): void
 }
 interface TrackerConstructor {
   readonly prototype: Tracker

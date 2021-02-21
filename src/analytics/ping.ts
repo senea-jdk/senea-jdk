@@ -1,6 +1,6 @@
 import { warn, noob } from '../util'
 
-// 智能ga请求，依据请求的长度和浏览器特性来决定使用哪种请求方式
+// 依据请求的长度和浏览器特性来决定使用哪种请求方式
 export const smartPing = function (
   api: string,
   param: string,
